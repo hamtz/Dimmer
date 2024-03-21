@@ -13,6 +13,9 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var slider: Slider
@@ -25,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         slider = findViewById(R.id.sl_slider)
         myText = findViewById(R.id.tv_kecerahan)
-        
+
 
         // Write a message to the database
         val database = Firebase.database
@@ -34,7 +37,35 @@ class MainActivity : AppCompatActivity() {
         slider.addOnChangeListener(Slider.OnChangeListener { slider, value, fromUser ->
             myRef.setValue(value.toInt())
             myText.text = value.toInt().toString()
+
+            val brightness = value.toInt()
+            sendBrightnessToNodeMCU(brightness)
         })
     }
 
+    private fun sendBrightnessToNodeMCU(brightness: Int) {
+        val client = OkHttpClient()
+        val url = "http://192.168.1.100/set_brightness" // Ubah IP dengan IP NodeMCU Anda
+        val json = "{\"brightness\":$brightness}"
+
+        val body = RequestBody.create("application/json".toMediaTypeOrNull(), json)
+        val request = Request.Builder()
+            .url(url)
+            .post(body)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+//                response.use {
+                    if (!response.isSuccessful) {
+                        throw IOException("Unexpected code $response")
+                    }
+//                }
+            }
+        })
+    }
 }
