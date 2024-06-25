@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //akan menggunakan 2 slider dan 2 table di firebase
+
         slider = findViewById(R.id.sl_slider)
         myText = findViewById(R.id.tv_kecerahan)
         
