@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun sendBrightnessToNodeMCU(brightness: Int) {
         val client = OkHttpClient()
-        val url = "http://192.168.1.100/set_brightness" // Ubah IP dengan IP NodeMCU Anda
+        val url = "https://192.168.1.100/set_brightness" // Ubah IP dengan IP NodeMCU Anda
         val json = "{\"brightness\":$brightness}"
 
         val body = RequestBody.create("application/json".toMediaTypeOrNull(), json)
