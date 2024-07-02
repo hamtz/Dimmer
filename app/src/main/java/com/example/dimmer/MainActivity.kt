@@ -16,7 +16,9 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var slider: Slider
+    private lateinit var slider2: Slider
     private lateinit var myText: TextView
+    private lateinit var myText2: TextView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,16 +28,23 @@ class MainActivity : AppCompatActivity() {
         //akan menggunakan 2 slider dan 2 table di firebase
 
         slider = findViewById(R.id.sl_slider)
+        slider2 = findViewById(R.id.sl_slider2)
         myText = findViewById(R.id.tv_kecerahan)
-        
+        myText2 = findViewById(R.id.tv_kecerahan2)
+
 
         // Write a message to the database
         val database = Firebase.database
         val myRef = database.getReference("nilai_int")
+        val myRef2 = database.getReference("nilai_int2")
 
         slider.addOnChangeListener(Slider.OnChangeListener { slider, value, fromUser ->
             myRef.setValue(value.toInt())
             myText.text = value.toInt().toString()
+        })
+        slider2.addOnChangeListener(Slider.OnChangeListener { slider2, value, fromUser ->
+            myRef2.setValue(value.toInt())
+            myText2.text = value.toInt().toString()
         })
     }
 
